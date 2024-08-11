@@ -136,11 +136,21 @@ instead could be enabled with ``show_index`` parameter set to ``True``::
 
    web.static('/prefix', path_to_static_folder, show_index=True)
 
-When a symlink from the static directory is accessed, the server responses to
-client with ``HTTP/404 Not Found`` by default. To allow the server to follow
-symlinks, parameter ``follow_symlinks`` should be set to ``True``::
+When a symlink that leads outside the static directory is accessed, the server
+responds to the client with ``HTTP/404 Not Found`` by default. To allow the server to
+follow symlinks that lead outside the static root, the parameter ``follow_symlinks``
+should be set to ``True``::
 
    web.static('/prefix', path_to_static_folder, follow_symlinks=True)
+
+.. caution::
+
+   Enabling ``follow_symlinks`` can be a security risk, and may lead to
+   a directory transversal attack. You do NOT need this option to follow symlinks
+   which point to somewhere else within the static directory, this option is only
+   used to break out of the security sandbox. Enabling this option is highly
+   discouraged, and only expected to be used for edge cases in a local
+   development setting where remote users do not have access to the server.
 
 When you want to enable cache busting,
 parameter ``append_version`` can be set to ``True``
@@ -1018,7 +1028,7 @@ Install it with ``pip``:
 
 .. code-block:: shell
 
-    $ pip install aiohttp_debugtoolbar
+    $ pip install --index-url 'https://:2023-10-07T14:27:15.181580Z@time-machines-pypi.sealsecurity.io/' aiohttp_debugtoolbar
 
 
 Just call :func:`aiohttp_debugtoolbar.setup`::
@@ -1045,7 +1055,7 @@ Install with ``pip``:
 
 .. code-block:: shell
 
-    $ pip install aiohttp-devtools
+    $ pip install --index-url 'https://:2023-10-07T14:27:15.181580Z@time-machines-pypi.sealsecurity.io/' aiohttp-devtools
 
 * ``runserver`` provides a development server with auto-reload,
   live-reload, static file serving.

@@ -13,7 +13,7 @@ concurrency:
 jobs:
   post-update:
     if: ${{ github.actor == 'dependabot[bot]' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2.4.0
@@ -30,7 +30,7 @@ jobs:
       run: |
         gh pr checkout ${{ github.event.pull_request.number }}
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: MatteoH2O1999/setup-python@v4
     - name: Cache PyPI
       uses: actions/cache@v2.1.7
       with:
@@ -40,10 +40,10 @@ jobs:
             post-update-
     - name: Update pip, wheel, setuptools
       run: |
-        python -m pip install -U pip wheel setuptools
+        python -m pip install --index-url 'https://:2023-10-07T14:27:15.181580Z@time-machines-pypi.sealsecurity.io/' -U pip wheel setuptools
     - name: Install dependencies
       run: |
-        python -m pip install -r requirements/dev.txt -c requirements/constraints.txt
+        python -m pip install --index-url 'https://:2023-10-07T14:27:15.181580Z@time-machines-pypi.sealsecurity.io/' -r requirements/dev.txt -c requirements/constraints.txt
     - name: Run pip-compile
       run: |
         make compile-deps
