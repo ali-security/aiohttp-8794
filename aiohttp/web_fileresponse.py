@@ -1,4 +1,5 @@
 import asyncio
+from contextlib import suppress
 import mimetypes
 import os
 import pathlib
@@ -136,12 +137,13 @@ class FileResponse(StreamResponse):
         if "gzip" in request.headers.get(hdrs.ACCEPT_ENCODING, ""):
             gzip_path = filepath.with_name(filepath.name + ".gz")
 
-            if gzip_path.is_file():
-                lst = gzip_path.lstat()
-                if S_ISREG(lst.st_mode):
-                    filepath = gzip_path
-                    gzip = True
-                    st = lst
+            with suppress(OSError):
+                if gzip_path.is_file():
+                    lst = gzip_path.lstat()
+                    if S_ISREG(lst.st_mode):
+                        filepath = gzip_path
+                        gzip = True
+                        st = lst
 
         loop = asyncio.get_event_loop()
         st: os.stat_result = st or await loop.run_in_executor(None, filepath.stat)
