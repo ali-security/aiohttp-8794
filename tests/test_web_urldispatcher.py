@@ -441,7 +441,7 @@ async def test_access_compressed_file_as_symlink(tmp_path, aiohttp_client) -> No
     client = await aiohttp_client(app)
 
     # Symlink should be ignored; response reflects missing uncompressed file.
-    resp = await client.get(f"/{gz_link.stem}", auto_decompress=False)
+    resp = await client.get(f"/{gz_link.stem}")
     assert resp.status == 404
     resp.release()
 
